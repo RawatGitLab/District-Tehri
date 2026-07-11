@@ -1,0 +1,8 @@
+{
+  "name": " Geography of District Tehri for Planners and Administrators",
+  "description": "A full-stack geographic information system (GIS) application to fetch, explore, and visualize geographical boundaries, landmarks, rivers, blocks, and villages of Almora.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
