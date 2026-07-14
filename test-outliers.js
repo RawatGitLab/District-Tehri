@@ -1,9 +1,9 @@
 import { MongoClient } from "mongodb";
 import proj4 from "proj4";
 
-const MONGODB_URI = "mongodb+srv://varunrawatmailbox2507_db_user:GYVPiF8LG4HIbsSF@cluster0.8xfepsq.mongodb.net/?appName=Cluster0";
-const MONGODB_DB = "Shapefile";
-const MONGODB_COLLECTION = "Tehri";
+const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_DB = process.env.MONGODB_DB;
+const MONGODB_COLLECTION = process.env.MONGODB_COLLECTION;
 
 const UTM_44N = "+proj=utm +zone=44 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
 const INDIA_LCC_CUSTOM = "+proj=lcc +lat_1=12.472944444 +lat_2=35.147111111 +lat_0=3.98 +lon_0=80 +x_0=4000000 +y_0=1748300 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
