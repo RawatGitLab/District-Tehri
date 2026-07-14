@@ -65,9 +65,9 @@ function projectCoordinates(coordinates: any): any {
 const app = express();
 const PORT = 3000;
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://varunrawatmailbox2507_db_user:GYVPiF8LG4HIbsSF@cluster0.8xfepsq.mongodb.net/?appName=Cluster0";
-const MONGODB_DB = process.env.MONGODB_DB || "Shapefile";
-const MONGODB_COLLECTION = process.env.MONGODB_COLLECTION || "Tehri";
+const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_DB = process.env.MONGODB_DB;
+const MONGODB_COLLECTION = process.env.MONGODB_COLLECTION;
 
 let mongoClient: MongoClient | null = null;
 
