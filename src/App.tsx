@@ -19,6 +19,17 @@ import {
   RefreshCw
 } from "lucide-react";
 
+function hslToHex(h: number, s: number, l: number): string {
+  l /= 100;
+  const a = (s * Math.min(l, 1 - l)) / 100;
+  const f = (n: number) => {
+    const k = (n + h / 30) % 12;
+    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, "0");
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+
 export default function App() {
   const [features, setFeatures] = useState<GisFeature[]>([]);
   const [layers, setLayers] = useState<LayerConfig[]>([]);
@@ -26,7 +37,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
 
   // Map & Interaction state
-  const [activeBaseMap, setActiveBaseMap] = useState<string>("osm");
+  const [activeBaseMap, setActiveBaseMap] = useState<string>("satellite");
   const [selectedFeature, setSelectedFeature] = useState<GisFeature | null>(null);
   const [hoveredFeature, setHoveredFeature] = useState<GisFeature | null>(null);
   const [isTableCollapsed, setIsTableCollapsed] = useState<boolean>(true);
@@ -240,12 +251,12 @@ export default function App() {
         fillColor = "#f472b6";
         weight = 1.5;
         opacity = 0.95;
-      } else if (lowerName.includes("river") || lowerName.includes("canal") || lowerName.includes("water") || lowerName.includes("dam")) {
+      } else if (lowerName.includes("river") || lowerName.includes("canal") || lowerName.includes("water") || lowerName.includes("dam") || lowerName.includes("stream")) {
         color = "#0ea5e9"; // stream sky blue
         fillColor = "#38bdf8";
         weight = 2.5;
         opacity = 1.0;
-        fillOpacity = 0.1;
+        fillOpacity = 0.0; // Line geometry, so no fill
       } else if (lowerName.includes("district")) {
         color = "#a16207"; // Golden brown outline
         fillColor = "#fbbf24"; // Mustard polygon fill
@@ -273,8 +284,21 @@ export default function App() {
       } else {
         // Dynamic palette for any other shapefile imported
         const hue = (index * 137.5) % 360; 
-        color = `hsl(${hue}, 70%, 45%)`;
-        fillColor = `hsl(${hue}, 70%, 65%)`;
+        color = hslToHex(hue, 70, 45);
+        fillColor = hslToHex(hue, 70, 65);
+      }
+
+      // If the layer is a polygon, make it hollow (no fill) and white outline!
+      if (type === "polygon") {
+        color = "#ffffff";
+        fillColor = "#ffffff";
+        fillOpacity = 0.0;
+        weight = 2.0;
+      }
+
+      // For lines, ensure no fill is applied
+      if (type === "linestring") {
+        fillOpacity = 0.0;
       }
 
       return {
@@ -342,8 +366,6 @@ export default function App() {
     setHoveredFeature(null);
     setMeasureMode("none");
     setMeasurePoints([]);
-    // Simple state refresh to reset sliders or zoom
-    setLayers((prev) => prev.map((l) => ({ ...l, visible: true, opacity: l.type === "polygon" && l.name.toLowerCase().includes("tehsil") ? 0.85 : 0.9 })));
   };
 
   const toggleAllLayers = (visible: boolean) => {
